@@ -7,7 +7,7 @@ import { addLike, removeLike, deletePost } from '../../actions/post';
 
 const PostItem = ({
   addLike,
-  remobeLike,
+  removeLike,
   deletePost,
   auth,
   post: { _id, text, name, avatar, user, likes, comments, date },
@@ -38,10 +38,7 @@ const PostItem = ({
               {likes.length > 0 && <span>{likes.length}</span>}
             </button>
             <button
-              onClick={() => {
-                console.log('onclick');
-                removeLike(_id);
-              }}
+              onClick={() => removeLike(_id)}
               type='button'
               className='btn btn-light'
             >

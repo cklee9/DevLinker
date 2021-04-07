@@ -15,12 +15,20 @@ import {
 //Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
   try {
+    console.log('getCurrentProfile1');
+    // const res = await axios.get('/api/profile/me', {
+    //   validateStatus: function (status) {
+    //     return status <= 300; // Reject only if the status code is greater than 300
+    //   },
+    // });
     const res = await axios.get('/api/profile/me');
+    console.log('getCurrentProfile2', res);
     dispatch({
       type: GET_PROFILE,
       payload: res.data,
     });
   } catch (err) {
+    console.log('getCurrentProfile, err is', err.response);
     dispatch({
       type: PROFILE_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
@@ -64,7 +72,7 @@ export const getProfileById = (userId) => async (dispatch) => {
 // Get Github repos
 export const getGithubRepos = (username) => async (dispatch) => {
   try {
-    const res = await axios.get(`/api/profile/github/${username}`);
+    const res = await axios.get(`/api/profile/github/userRepos/${username}`);
     dispatch({
       type: GET_REPOS,
       payload: res.data,
@@ -77,6 +85,18 @@ export const getGithubRepos = (username) => async (dispatch) => {
   }
 };
 
+// Get Github user profile
+// const getGithubProfile = async (githubusername) => {
+//   const githubUserProfile = await axios.get(
+//     `/api/profile/github/userProfile/${githubusername}`
+//   );
+//   console.log('githubUserProfile is', githubUserProfile);
+//   return {
+//     login: githubUserProfile.data.login,
+//     avatar_url: githubUserProfile.data.avatar_url,
+//   };
+// };
+
 // Create or update a profile
 export const createProfile = (formData, history, edit = false) => async (
   dispatch
@@ -87,6 +107,13 @@ export const createProfile = (formData, history, edit = false) => async (
         'Content-Type': 'application/json',
       },
     };
+
+    // console.log('in create profile, formData is', formData.githubusername);
+    // if (formData.githubusername) {
+    //   const githubuserprofile = await getGithubProfile(formData.githubusername);
+    //   formData.githubuserprofile = { ...githubuserprofile };
+    // }
+
     const res = await axios.post('/api/profile', formData, config);
     dispatch({
       type: GET_PROFILE,

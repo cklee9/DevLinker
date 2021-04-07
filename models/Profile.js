@@ -28,6 +28,14 @@ const ProfileSchema = new mongoose.Schema({
   githubusername: {
     type: String,
   },
+  // githubuserprofile: {
+  //   login: {
+  //     type: String,
+  //   },
+  //   avatar_url: {
+  //     type: String,
+  //   },
+  // },
   experience: [
     {
       title: {

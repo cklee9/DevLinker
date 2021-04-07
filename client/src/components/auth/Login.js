@@ -1,10 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/auth';
+
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -16,7 +17,6 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import PersonIcon from '@material-ui/icons/Person';
 import { Button } from 'antd';
-import 'antd/dist/antd.css';
 import backgroundImage from '../../img/signInImg4.jpeg';
 import Container from '@material-ui/core/Container';
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     width: '42ch',
   },
   paper: {
-    width: '50ch',
+    width: '48ch',
     height: '48ch',
   },
 
@@ -145,7 +145,7 @@ const Login = ({ login, isAuthenticated }) => {
   return (
     <Fragment>
       <Container maxWidth='xl' disableGutters={true} className={classes.root}>
-        <Paper elevation={4} className={classes.paper}>
+        <Paper elevation={6} className={classes.paper}>
           <form className={classes.form}>
             <h1>Sign In</h1>
             <h3 className={clsx(classes.margin, classes.title)}>

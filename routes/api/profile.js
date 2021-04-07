@@ -14,14 +14,16 @@ const Post = require('../../models/Post');
 // @access  Private
 router.get('/me', auth, async (req, res) => {
   try {
+    console.log('call in me api');
     const profile = await Profile.findOne({
       user: req.user.id,
     }).populate('user', ['name', 'avatar']);
 
+    console.log('profile', profile);
     if (!profile) {
       return res.status(400).json({ msg: 'There is no profile for this user' });
     }
-    res.json(profile);
+    res.status(200).json(profile);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -59,6 +61,7 @@ router.post(
       twitter,
       instagram,
       linkedin,
+      githubuserprofile,
     } = req.body;
 
     // Build profile object
@@ -74,6 +77,12 @@ router.post(
       profileFields.skills = skills.split(',').map((skill) => skill.trim());
     }
 
+    //Build githubuserprofile
+    // console.log('githubuserprofile is', githubuserprofile);
+    // if (githubuserprofile) {
+    //   profileFields.githubuserprofile = { ...githubuserprofile };
+    // }
+
     //Build social object
     profileFields.social = {};
     if (youtube) profileFields.social.youtube = youtube;
@@ -83,7 +92,9 @@ router.post(
     if (linkedin) profileFields.social.linkedin = linkedin;
 
     try {
+      console.log('find one profile is:', req.user.id);
       let profile = await Profile.findOne({ user: req.user.id });
+      console.log('find one profile is:', profile, req.user.id);
       if (profile) {
         //Update profile
         profile = await Profile.findOneAndUpdate(
@@ -100,11 +111,11 @@ router.post(
       await profile.save();
       res.json(profile);
     } catch (err) {
-      cosnole.error(err.message);
+      console.error(err.message);
       res.status(500).send('Server Error');
     }
 
-    res.send('Hello');
+    // res.send('Hello');
   }
 );
 
@@ -306,10 +317,10 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
   }
 });
 
-// @route   GET api/profile/github/:username
+// @route   GET api/profile/github/userRepos/:username
 // @desc    Get user repos from Github
 // @access  Public
-router.get('/github/:username', (req, res) => {
+router.get('/github/userrepos/:username', (req, res) => {
   try {
     const options = {
       uri: `https://api.github.com/users/${
@@ -335,4 +346,35 @@ router.get('/github/:username', (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+// @route   GET api/profile/github/userProfile/:username
+// @desc    Get user profile from Github
+// @access  Public
+router.get('/github/userprofile/:username', (req, res) => {
+  try {
+    const options = {
+      uri: `https://api.github.com/users/${
+        req.params.username
+      }?client_id=${config.get('githubClientId')}&client_secret=${config.get(
+        'githubSecret'
+      )}`,
+      method: 'GET',
+      headers: { 'user-agent': 'node.js' },
+    };
+
+    request(options, (error, response, body) => {
+      if (error) console.error(error);
+
+      if (response.statusCode !== 200) {
+        return res.status(404).json({ msg: 'No Github profile found' });
+      }
+
+      res.json(JSON.parse(body));
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

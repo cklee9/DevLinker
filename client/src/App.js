@@ -15,6 +15,7 @@ import Profile from './components/profile/Profile';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
 import PrivateRoute from './components/routing/PrivateRoute';
+import 'antd/dist/antd.css';
 
 //Redux
 import { Provider } from 'react-redux';
